@@ -87,9 +87,9 @@ def index():
 @application.post("/recommendation")
 def food_recommendation(input_data: NutritionalInput):
     # Ambil input data
-    input_nutrisi = np.array([[input_data.Calories, input_data.FatContent, input_data.SaturatedFatContent,
-                               input_data.CholesterolContent, input_data.SodiumContent, input_data.CarbohydrateContent,
-                               input_data.FiberContent, input_data.SugarContent, input_data.ProteinContent]])
+    input_nutrisi = np.array([[int(input_data.Calories), int(input_data.FatContent), int(input_data.SaturatedFatContent),
+                               int(input_data.CholesterolContent), int(input_data.SodiumContent), int(input_data.CarbohydrateContent),
+                               int(input_data.FiberContent), int(input_data.SugarContent), int(input_data.ProteinContent)]])
 
     # Skala data input
     input_nutrisi_scaled = scaler.transform(input_nutrisi)
