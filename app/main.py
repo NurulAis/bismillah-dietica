@@ -29,6 +29,7 @@ local_model_kalori = "./model_rekomendasi_kalori.h5"
 download_model_from_drive(file_id_model_v2, local_model_v2)
 download_model_from_drive(file_id_model_kalori, local_model_kalori)
 
+# Fungsi untuk mengunduh dataset dari Google Drive
 def download_dataset_from_drive(file_id, output_path):
     if not os.path.exists(output_path):  # Hanya unduh jika file belum ada
         url = f"https://drive.google.com/uc?id={file_id}"
@@ -47,21 +48,19 @@ download_dataset_from_drive(file_id_dataset_nutrisi, local_dataset_nutrisi)
 download_dataset_from_drive(file_id_extracted_data, local_extracted_data)
 
 # Load dataset setelah diunduh
-dataset_nutrisi = pd.read_csv(local_dataset_nutrisi)
+dataset_nutrisi = pd.read_csv(local_dataset_nutrisi).astype(float)  # Pastikan semua data adalah float
 extracted_data = pd.read_csv(local_extracted_data)
 
-# Load dataset dan model
-# dataset_nutrisi = pd.read_csv('./dataset_nutrisi.csv')
-# extracted_data = pd.read_csv('./extracted_data.csv')
-
+# Inisialisasi scaler
 scaler = MinMaxScaler()
 scaler.fit(dataset_nutrisi)
-dataset_nutrisi_scaled = scaler.fit_transform(dataset_nutrisi)
+dataset_nutrisi_scaled = scaler.transform(dataset_nutrisi)
 
-# model = load_model('./model_rekomendasi_v2.h5')
-# model_kalori = load_model('./model_rekomendasi_kalori.h5')
+# Load model setelah diunduh
 model = load_model(local_model_v2)
 model_kalori = load_model(local_model_kalori)
+
+# Prediksi fitur laten
 predicted_latent_feature = model.predict(dataset_nutrisi_scaled)
 
 # Inisialisasi FastAPI
@@ -69,15 +68,15 @@ application = FastAPI()
 
 # Model untuk input data nutrisi
 class NutritionalInput(BaseModel):
-    Calories: int
-    FatContent: int
-    SaturatedFatContent: int
-    CholesterolContent: int
-    SodiumContent: int
-    CarbohydrateContent: int
-    FiberContent: int
-    SugarContent: int
-    ProteinContent: int
+    Calories: float
+    FatContent: float
+    SaturatedFatContent: float
+    CholesterolContent: float
+    SodiumContent: float
+    CarbohydrateContent: float
+    FiberContent: float
+    SugarContent: float
+    ProteinContent: float
 
 # Endpoint utama
 @application.get("/")
