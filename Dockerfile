@@ -1,20 +1,24 @@
-FROM python:3.12.5
+# Gunakan base image Python versi spesifik
+FROM python:3.12.5-slim
 
-#chage working directory
+# Tetapkan working directory dalam container
 WORKDIR /code
 
-# add requirements file to image
+# Salin file requirements.txt ke dalam image
 COPY ./requirements.txt /code/requirements.txt
 
-#install pyhton libraries
-RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
+# Install dependencies dengan pip
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
-# add python code
+# Salin semua kode aplikasi ke dalam container
 COPY ./app /code/app
 
-# specify default commands
-#CMD ["fastapi", "run", "app/main.py", "--port", "80"]
+# Tambahkan perintah untuk memastikan file penting ada (opsional, untuk debugging)
+RUN ls /code/app
 
+# Ekspos port aplikasi (tidak diperlukan untuk Cloud Run, tapi tetap baik untuk debugging lokal)
 EXPOSE 8000
 
+# Default command untuk menjalankan aplikasi
 CMD ["uvicorn", "app.main:application", "--host", "0.0.0.0", "--port", "8000"]
