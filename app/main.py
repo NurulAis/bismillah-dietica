@@ -67,16 +67,16 @@ predicted_latent_feature = model.predict(dataset_nutrisi_scaled)
 application = FastAPI()
 
 # Model untuk input data nutrisi
-class NutritionalInput(BaseModel):
-    Calories: float
-    FatContent: float
-    SaturatedFatContent: float
-    CholesterolContent: float
-    SodiumContent: float
-    CarbohydrateContent: float
-    FiberContent: float
-    SugarContent: float
-    ProteinContent: float
+# class NutritionalInput(BaseModel):
+#     Calories: float
+#     FatContent: float
+#     SaturatedFatContent: float
+#     CholesterolContent: float
+#     SodiumContent: float
+#     CarbohydrateContent: float
+#     FiberContent: float
+#     SugarContent: float
+#     ProteinContent: float
 
 # Endpoint utama
 @application.get("/")
@@ -85,13 +85,24 @@ def index():
 
 # Rekomendasi berdasarkan nutrisi
 @application.post("/recommendation")
-def food_recommendation(input_data: NutritionalInput):
+def food_recommendation(Calories: float,
+                        FatContent: float,
+                        SaturatedFatContent: float,
+                        CholesterolContent: float,
+                        SodiumContent: float,
+                        CarbohydrateContent: float,
+                        FiberContent: float,
+                        SugarContent: float,
+                        ProteinContent: float):
     # Ambil input data
-    input_nutrisi = np.array([[round(input_data.Calories), round(input_data.FatContent), round(input_data.SaturatedFatContent),
-                               round(input_data.CholesterolContent), round(input_data.SodiumContent), round(input_data.CarbohydrateContent),
-                               round(input_data.FiberContent), round(input_data.SugarContent), round(input_data.ProteinContent)]])
+    # input_nutrisi = np.array([[round(input_data.Calories), round(input_data.FatContent), round(input_data.SaturatedFatContent),
+    #                            round(input_data.CholesterolContent), round(input_data.SodiumContent), round(input_data.CarbohydrateContent),
+    #                            round(input_data.FiberContent), round(input_data.SugarContent), round(input_data.ProteinContent)]])
+    input_nutrisi = np.array([[Calories, FatContent, SaturatedFatContent,
+                                CholesterolContent, SodiumContent, CarbohydrateContent,
+                                FiberContent, SugarContent, ProteinContent]])
 
-    # Skala data input
+    # Skala data inpu
     input_nutrisi_scaled = scaler.transform(input_nutrisi)
 
     # Hitung similarity
